@@ -14,6 +14,7 @@ const I18N = {
     templates: '模板', namePh: '名称', save: '保存', share: '🔗 分享链接', examples: '示例',
     untitled: '未命名', del: '删除', empty: '先画点什么吧 🙂', saved: '已保存 ✓',
     copied: '链接已复制，发给朋友吧 💌', copyPrompt: '复制这个链接：', received: '有人给你发了一段旋律，点 ▶ 播放',
+    sharedNote: '这里的模板是共享的：打开这个页面的人都能看到。', failed: '没保存成功：你可能只有查看权限。',
     heart: '爱心', smile: '笑脸', wave: '波浪', stairs: '阶梯',
   },
   en: {
@@ -23,6 +24,7 @@ const I18N = {
     templates: 'Templates', namePh: 'Name', save: 'Save', share: '🔗 Share link', examples: 'Examples',
     untitled: 'Untitled', del: 'Delete', empty: 'Draw something first 🙂', saved: 'Saved ✓',
     copied: 'Link copied — send it 💌', copyPrompt: 'Copy this link:', received: 'Someone sent you a tune — press ▶',
+    sharedNote: 'Templates here are shared: everyone who opens this page sees them.', failed: "Couldn't save: you may only have view access.",
     heart: 'Heart', smile: 'Smiley', wave: 'Wave', stairs: 'Stairs',
   },
 };
@@ -287,30 +289,34 @@ function preview(g) {
   return cv;
 }
 
+// на claude.ai шаблоны общие (db): их видят все, кто открыл страницу
+let shared = null, sharedList = [];
+
 function renderList() {
   const list = $('list');
   list.innerHTML = '';
-  const add = (tpl, idx) => {
-    const g = decode(tpl.code);
+  const add = (tpl, onDelete) => {
+    const g = typeof tpl.code === 'string' && decode(tpl.code);
     if (!g) return;
+    const label = onDelete ? String(tpl.name || t('untitled')).slice(0, 40) : t(tpl.name);
     const li = document.createElement('li');
     li.className = 'item';
     const name = document.createElement('span');
-    const label = idx === undefined ? t(tpl.name) : tpl.name;
     name.textContent = label;
     li.append(preview(g), name);
     li.onclick = () => { setGrid(g); $('name').value = label.replace(/^💌 /, ''); };
-    if (idx !== undefined) { // свои шаблоны можно удалять, примеры — нет
+    if (onDelete) { // свои шаблоны можно удалять, примеры — нет
       const del = document.createElement('button');
       del.className = 'del';
       del.textContent = '✕';
       del.title = t('del');
-      del.onclick = e => { e.stopPropagation(); mine.splice(idx, 1); persist(); renderList(); };
+      del.onclick = e => { e.stopPropagation(); onDelete(); };
       li.append(del);
     }
     list.append(li);
   };
-  mine.forEach(add);
+  if (shared) sharedList.forEach(tpl => add(tpl, () => shared.doc(tpl.id).delete().catch(() => say(t('failed')))));
+  else mine.forEach((tpl, i) => add(tpl, () => { mine.splice(i, 1); persist(); renderList(); }));
   const title = document.createElement('li');
   title.className = 'title';
   title.textContent = t('examples');
@@ -320,15 +326,35 @@ function renderList() {
 
 const isEmpty = () => !grid.some(Boolean);
 
-$('save').onclick = () => {
+$('save').onclick = async () => {
   if (isEmpty()) return say(t('empty'));
   const name = $('name').value.trim() || t('untitled');
+  const code = encode(grid);
+  if (shared) {
+    const old = sharedList.find(tpl => tpl.name === name);
+    try {
+      await (old ? shared.doc(old.id) : shared.doc()).set({ name, code, at: Date.now() });
+      say(t('saved'));
+    } catch { say(t('failed')); }
+    return;
+  }
   mine = mine.filter(tpl => tpl.name !== name);
-  mine.unshift({ name, code: encode(grid) });
+  mine.unshift({ name, code });
   persist();
   renderList();
   say(t('saved'));
 };
+
+async function connectShared() {
+  const db = await window.claude.use('db');
+  if (!db) return;
+  shared = db.collection('tunes');
+  $('note').hidden = false;
+  shared.orderBy('at', 'desc').limit(200).onSnapshot(snap => {
+    sharedList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderList();
+  }, () => { shared = null; $('note').hidden = true; renderList(); });
+}
 
 $('share').onclick = () => {
   if (isEmpty()) return say(t('empty'));
@@ -372,4 +398,6 @@ $('lang').onclick = () => {
 
 applyLang();
 openShared();
+// внутри claude.ai ссылки с #... не доходят до страницы, там вместо них общий список
+if (window.claude?.use) { $('share').hidden = true; connectShared(); }
 if (isEmpty()) setGrid(decode(EXAMPLES[0].code));
