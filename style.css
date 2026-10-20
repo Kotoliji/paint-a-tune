@@ -75,6 +75,36 @@ select, .side input {
 label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #555; }
 .tempo input { width: 120px; accent-color: #222; }
 
+/* --- шаблоны --- */
+.side h2 { margin: 0 0 12px; font-size: 18px; }
+.save { display: flex; gap: 8px; }
+.save input { flex: 1; min-width: 0; }
+.wide { width: 100%; margin-top: 8px; }
+.msg { min-height: 18px; margin: 8px 0; font-size: 13px; color: #2a8a4a; }
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.list .title { margin: 10px 0 0; font-size: 12px; color: #aaa; }
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border: 1px solid #eef0f3;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.item:hover { background: #f6f7f9; }
+.item canvas {
+  width: 64px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: #f0f1f4;
+  image-rendering: pixelated;
+}
+.item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+.item .del { padding: 4px 9px; background: transparent; color: #bbb; }
+.item .del:hover { background: #fdeaea; color: #d33; }
+
 @media (max-width: 820px) {
   .app { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
   .board, .side { padding: 16px; }
