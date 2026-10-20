@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Нарисуй мелодию</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <section class="board">
+      <h1>Нарисуй мелодию.</h1>
+      <p class="sub">Закрась плитки — и послушай, как это звучит.</p>
+      <div id="grid" class="grid"></div>
+      <div class="axis"><span>время →</span><span>выше ↑ · ниже ↓</span></div>
+      <div class="controls">
+        <button id="play" class="primary">▶ Играть</button>
+        <button id="clear">Очистить</button>
+        <label>Звук
+          <select id="sound">
+            <option value="handpan">Хендпан</option>
+            <option value="xylo">Ксилофон</option>
+          </select>
+        </label>
+        <label class="tempo">Темп
+          <input id="tempo" type="range" min="60" max="260" value="150">
+          <span id="bpm">150</span>
+        </label>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
