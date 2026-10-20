@@ -1,4 +1,4 @@
-# Paint a tune · 画一段旋律
+# Paint a tune for Liu Wanqing · 给 Liu Wanqing 画一段旋律
 
 A 32×16 grid of tiles: paint a picture or a word, press ▶ and it plays as music.
 Columns are time (left to right), rows are pitch (top is higher). Notes use a minor pentatonic scale, so any drawing sounds nice. Sound is a handpan or xylophone synthesized with Web Audio — no audio files.

@@ -8,7 +8,7 @@ const $ = id => document.getElementById(id);
 
 const I18N = {
   zh: {
-    title: '画一段旋律', h1: '画一段旋律。', sub: '点亮方块，听听它的声音。',
+    title: '给 Liu Wanqing 的旋律', h1: '给 Liu Wanqing 画一段旋律。', sub: '点亮方块，听听它的声音。',
     time: '时间 →', pitch: '高 ↑ · 低 ↓', play: '▶ 播放', stop: '■ 停止', clear: '清空',
     sound: '音色', handpan: '手碟', xylo: '木琴', tempo: '速度',
     templates: '模板', namePh: '名称', save: '保存', share: '🔗 分享链接', examples: '示例',
@@ -18,7 +18,7 @@ const I18N = {
     heart: '爱心', smile: '笑脸', wave: '波浪', stairs: '阶梯',
   },
   en: {
-    title: 'Paint a tune', h1: 'Paint a tune.', sub: 'Draw something. Hear what it sounds like.',
+    title: 'Tunes for Liu Wanqing', h1: 'Paint a tune for Liu Wanqing.', sub: 'Draw something. Hear what it sounds like.',
     time: 'time →', pitch: 'higher ↑ · lower ↓', play: '▶ Play', stop: '■ Stop', clear: 'Clear',
     sound: 'Sound', handpan: 'Handpan', xylo: 'Xylophone', tempo: 'Tempo',
     templates: 'Templates', namePh: 'Name', save: 'Save', share: '🔗 Share link', examples: 'Examples',
