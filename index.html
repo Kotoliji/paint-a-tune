@@ -1,28 +1,31 @@
 <!doctype html>
-<html lang="ru">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Нарисуй мелодию</title>
+  <title>画一段旋律</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="app">
     <section class="board">
-      <h1>Нарисуй мелодию.</h1>
-      <p class="sub">Закрась плитки — и послушай, как это звучит.</p>
+      <div class="head">
+        <h1 data-i18n="h1">画一段旋律。</h1>
+        <button id="lang" class="lang">EN</button>
+      </div>
+      <p class="sub" data-i18n="sub">点亮方块，听听它的声音。</p>
       <div id="grid" class="grid"></div>
-      <div class="axis"><span>время →</span><span>выше ↑ · ниже ↓</span></div>
+      <div class="axis"><span data-i18n="time">时间 →</span><span data-i18n="pitch">高 ↑ · 低 ↓</span></div>
       <div class="controls">
-        <button id="play" class="primary">▶ Играть</button>
-        <button id="clear">Очистить</button>
-        <label>Звук
+        <button id="play" class="primary">▶ 播放</button>
+        <button id="clear" data-i18n="clear">清空</button>
+        <label><span data-i18n="sound">音色</span>
           <select id="sound">
-            <option value="handpan">Хендпан</option>
-            <option value="xylo">Ксилофон</option>
+            <option value="handpan" data-i18n="handpan">手碟</option>
+            <option value="xylo" data-i18n="xylo">木琴</option>
           </select>
         </label>
-        <label class="tempo">Темп
+        <label class="tempo"><span data-i18n="tempo">速度</span>
           <input id="tempo" type="range" min="60" max="260" value="150">
           <span id="bpm">150</span>
         </label>
@@ -30,12 +33,12 @@
     </section>
 
     <aside class="side">
-      <h2>Шаблоны</h2>
+      <h2 data-i18n="templates">模板</h2>
       <div class="save">
-        <input id="name" placeholder="Название" maxlength="30">
-        <button id="save">Сохранить</button>
+        <input id="name" data-i18n-ph="namePh" placeholder="名称" maxlength="30">
+        <button id="save" data-i18n="save">保存</button>
       </div>
-      <button id="share" class="wide">🔗 Поделиться ссылкой</button>
+      <button id="share" class="wide" data-i18n="share">🔗 分享链接</button>
       <p id="msg" class="msg"></p>
       <ul id="list" class="list"></ul>
     </aside>

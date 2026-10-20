@@ -3,6 +3,32 @@ const SCALE = [0, 3, 5, 7, 10]; // минорная пентатоника: лю
 const BASE = 50;                 // нижняя нота — D3
 
 const $ = id => document.getElementById(id);
+
+// ---------- языки ----------
+
+const I18N = {
+  zh: {
+    title: '画一段旋律', h1: '画一段旋律。', sub: '点亮方块，听听它的声音。',
+    time: '时间 →', pitch: '高 ↑ · 低 ↓', play: '▶ 播放', stop: '■ 停止', clear: '清空',
+    sound: '音色', handpan: '手碟', xylo: '木琴', tempo: '速度',
+    templates: '模板', namePh: '名称', save: '保存', share: '🔗 分享链接', examples: '示例',
+    untitled: '未命名', del: '删除', empty: '先画点什么吧 🙂', saved: '已保存 ✓',
+    copied: '链接已复制，发给朋友吧 💌', copyPrompt: '复制这个链接：', received: '有人给你发了一段旋律，点 ▶ 播放',
+    heart: '爱心', smile: '笑脸', wave: '波浪', stairs: '阶梯',
+  },
+  en: {
+    title: 'Paint a tune', h1: 'Paint a tune.', sub: 'Draw something. Hear what it sounds like.',
+    time: 'time →', pitch: 'higher ↑ · lower ↓', play: '▶ Play', stop: '■ Stop', clear: 'Clear',
+    sound: 'Sound', handpan: 'Handpan', xylo: 'Xylophone', tempo: 'Tempo',
+    templates: 'Templates', namePh: 'Name', save: 'Save', share: '🔗 Share link', examples: 'Examples',
+    untitled: 'Untitled', del: 'Delete', empty: 'Draw something first 🙂', saved: 'Saved ✓',
+    copied: 'Link copied — send it 💌', copyPrompt: 'Copy this link:', received: 'Someone sent you a tune — press ▶',
+    heart: 'Heart', smile: 'Smiley', wave: 'Wave', stairs: 'Stairs',
+  },
+};
+let lang = 'zh'; // китайский по умолчанию
+try { lang = localStorage.getItem('paint-a-tune-lang') || 'zh'; } catch {}
+const t = key => I18N[lang][key] || key;
 const gridEl = $('grid');
 let grid = new Array(COLS * ROWS).fill(false);
 const cells = [];
@@ -105,7 +131,7 @@ function start() {
   playing = true;
   step = 0;
   nextTime = ctx.currentTime + 0.05;
-  $('play').textContent = '■ Стоп';
+  $('play').textContent = t('stop');
   timer = setInterval(schedule, 25);
   schedule();
 }
@@ -115,7 +141,7 @@ function stop() {
   runId++;
   clearInterval(timer);
   showHead(-1);
-  $('play').textContent = '▶ Играть';
+  $('play').textContent = t('play');
 }
 
 // ноты планируются чуть заранее — так ритм не «плывёт»
@@ -205,7 +231,7 @@ const EXAMPLES = [
     '#...#.#..#..#..',
     '###.###..#..###',
   ])],
-  ['Сердечко', fromArt([
+  ['heart', fromArt([
     '..###.....###..',
     '.#...#...#...#.',
     '#.....#.#.....#',
@@ -219,7 +245,7 @@ const EXAMPLES = [
     '......#.#......',
     '.......#.......',
   ])],
-  ['Смайлик', fromArt([
+  ['smile', fromArt([
     '...#####...',
     '.##.....##.',
     '.#.......#.',
@@ -232,8 +258,8 @@ const EXAMPLES = [
     '.##.....##.',
     '...#####...',
   ])],
-  ['Волна', fromLine(c => Math.round(7.5 - 6.5 * Math.sin(c / COLS * Math.PI * 4)))],
-  ['Лесенка', fromLine(c => 15 - c % 16)],
+  ['wave', fromLine(c => Math.round(7.5 - 6.5 * Math.sin(c / COLS * Math.PI * 4)))],
+  ['stairs', fromLine(c => 15 - c % 16)],
 ].map(([name, g]) => ({ name, code: encode(g) }));
 
 let mine = [];
@@ -264,20 +290,21 @@ function preview(g) {
 function renderList() {
   const list = $('list');
   list.innerHTML = '';
-  const add = (t, idx) => {
-    const g = decode(t.code);
+  const add = (tpl, idx) => {
+    const g = decode(tpl.code);
     if (!g) return;
     const li = document.createElement('li');
     li.className = 'item';
     const name = document.createElement('span');
-    name.textContent = t.name;
+    const label = idx === undefined ? t(tpl.name) : tpl.name;
+    name.textContent = label;
     li.append(preview(g), name);
-    li.onclick = () => { setGrid(g); $('name').value = t.name.replace(/^💌 /, ''); };
+    li.onclick = () => { setGrid(g); $('name').value = label.replace(/^💌 /, ''); };
     if (idx !== undefined) { // свои шаблоны можно удалять, примеры — нет
       const del = document.createElement('button');
       del.className = 'del';
       del.textContent = '✕';
-      del.title = 'Удалить';
+      del.title = t('del');
       del.onclick = e => { e.stopPropagation(); mine.splice(idx, 1); persist(); renderList(); };
       li.append(del);
     }
@@ -286,29 +313,29 @@ function renderList() {
   mine.forEach(add);
   const title = document.createElement('li');
   title.className = 'title';
-  title.textContent = 'Примеры';
+  title.textContent = t('examples');
   list.append(title);
-  EXAMPLES.forEach(t => add(t));
+  EXAMPLES.forEach(tpl => add(tpl));
 }
 
 const isEmpty = () => !grid.some(Boolean);
 
 $('save').onclick = () => {
-  if (isEmpty()) return say('Сначала нарисуй что-нибудь 🙂');
-  const name = $('name').value.trim() || 'Без названия';
-  mine = mine.filter(t => t.name !== name);
+  if (isEmpty()) return say(t('empty'));
+  const name = $('name').value.trim() || t('untitled');
+  mine = mine.filter(tpl => tpl.name !== name);
   mine.unshift({ name, code: encode(grid) });
   persist();
   renderList();
-  say('Сохранено ✓');
+  say(t('saved'));
 };
 
 $('share').onclick = () => {
-  if (isEmpty()) return say('Сначала нарисуй что-нибудь 🙂');
-  const name = $('name').value.trim() || 'Без названия';
+  if (isEmpty()) return say(t('empty'));
+  const name = $('name').value.trim() || t('untitled');
   const url = location.href.split('#')[0] + '#n=' + encodeURIComponent(name) + '&g=' + encode(grid);
   const copied = navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject();
-  copied.then(() => say('Ссылка скопирована — отправь её 💌'), () => prompt('Скопируй ссылку:', url));
+  copied.then(() => say(t('copied')), () => prompt(t('copyPrompt'), url));
 };
 
 // открыли ссылку от друга → показываем рисунок и кладём его в «Шаблоны»
@@ -317,17 +344,32 @@ function openShared() {
   const g = p.get('g') && decode(p.get('g'));
   if (!g) return;
   const code = encode(g);
-  if (!mine.some(t => t.code === code)) {
-    mine.unshift({ name: '💌 ' + (p.get('n') || 'Без названия').slice(0, 30), code });
+  if (!mine.some(tpl => tpl.code === code)) {
+    mine.unshift({ name: '💌 ' + (p.get('n') || t('untitled')).slice(0, 30), code });
     persist();
   }
   setGrid(g);
   renderList();
   history.replaceState(null, '', location.pathname + location.search);
-  say('Тебе прислали мелодию — жми ▶');
+  say(t('received'));
 }
 window.addEventListener('hashchange', openShared);
 
-renderList();
+function applyLang() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  document.title = t('title');
+  document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
+  $('play').textContent = t(playing ? 'stop' : 'play');
+  $('lang').textContent = lang === 'zh' ? 'EN' : '中文';
+  renderList();
+}
+$('lang').onclick = () => {
+  lang = lang === 'zh' ? 'en' : 'zh';
+  try { localStorage.setItem('paint-a-tune-lang', lang); } catch {}
+  applyLang();
+};
+
+applyLang();
 openShared();
 if (isEmpty()) setGrid(decode(EXAMPLES[0].code));

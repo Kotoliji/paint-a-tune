@@ -23,7 +23,9 @@ body {
   box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
 }
 
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 h1 { font-size: 34px; font-weight: 600; margin: 0 0 4px; }
+button.lang { padding: 6px 12px; font-size: 13px; }
 .sub { margin: 0 0 20px; color: #888; }
 
 /* --- сетка --- */

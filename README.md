@@ -1,17 +1,12 @@
-# Нарисуй мелодию
+# Paint a tune · 画一段旋律
 
-Сетка 32×16 из плиток: закрашиваешь — получается рисунок, жмёшь ▶ — он играет музыку.
-Колонки — это время (слева направо), ряды — высота ноты (сверху выше).
-Ноты в минорной пентатонике, поэтому любой рисунок звучит красиво. Звук — хендпан или ксилофон (Web Audio, без файлов).
+A 32×16 grid of tiles: paint a picture or a word, press ▶ and it plays as music.
+Columns are time (left to right), rows are pitch (top is higher). Notes use a minor pentatonic scale, so any drawing sounds nice. Sound is a handpan or xylophone synthesized with Web Audio — no audio files.
 
-- **Сохранить** — рисунок попадает в «Шаблоны» справа (хранится в браузере).
-- **Поделиться ссылкой** — рисунок зашит прямо в ссылку. Друг открывает её и видит рисунок, а он сам добавляется ему в шаблоны.
-- Пробел — играть / стоп.
+- **Save** — the drawing goes to the Templates panel (stored in your browser).
+- **Share link** — the drawing is encoded in the link itself. Your friend opens it, sees the drawing, and it's added to their templates.
+- Chinese by default, English via the toggle. Space = play / stop.
 
-## Запуск
+## Run
 
-Просто открыть `index.html` в браузере. Сервер и сборка не нужны.
-
-## Хостинг
-
-Подойдёт любой статический хостинг: GitHub Pages (Settings → Pages → ветка `main`), Netlify Drop или Vercel.
+Open `index.html` in a browser. No server or build step.
