@@ -170,8 +170,14 @@ const App = (() => {
       bg.setAttribute('aria-hidden', 'true');
       document.body.prepend(bg);
     }
-    bg.dataset.n = urls.length;
-    bg.replaceChildren(...urls.map(u => { const img = new Image(); img.src = u; img.alt = ''; return img; }));
+    bg.replaceChildren(...urls.map(u => {
+      const fig = document.createElement('figure');
+      const img = new Image();
+      img.src = u;
+      img.alt = '';
+      fig.append(img);
+      return fig;
+    }));
   }
 
   // фото уменьшаем в браузере до ~1000px, чтобы база не разрасталась

@@ -150,24 +150,42 @@ body.palace {
   min-height: 100vh;
   font-family: var(--body-font);
   color: var(--ink);
-  background: var(--paper);
+  background: linear-gradient(160deg, #d8ecfb 0%, #b7dcf6 55%, #a3cff0 100%) fixed;
 }
-/* фон — коллаж из наших фото; common.js добавляет его только после входа по паролю */
-.bg-collage {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 1fr;
-  background: var(--paper);
+
+/* фон — наши фото, разбросанные по голубому как полароиды; появляются только после входа по паролю */
+.bg-collage { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg-collage figure {
+  position: absolute;
+  width: clamp(120px, 17vw, 270px);
+  margin: 0;
+  padding: 10px 10px 34px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(20, 60, 100, .25);
+  rotate: var(--r);
 }
-.bg-collage[data-n="1"] { grid-template-columns: 1fr; }
-.bg-collage[data-n="3"] img:last-child { grid-column: span 2; }
-.bg-collage img { width: 100%; height: 100%; min-height: 0; object-fit: cover; object-position: center 33%; }
+.bg-collage figure::before { /* скотч */
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 70px;
+  height: 20px;
+  translate: -50% 0;
+  background: rgba(255, 255, 255, .6);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+}
+.bg-collage img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; }
+.bg-collage figure:nth-child(1) { left: 1.5%; top: 34%; --r: -8deg; }
+.bg-collage figure:nth-child(2) { right: 2%; top: 25%; --r: 7deg; }
+.bg-collage figure:nth-child(3) { left: 4%; bottom: 3%; --r: 5deg; }
+.bg-collage figure:nth-child(4) { right: 4%; bottom: 2%; --r: -6deg; }
 @media (max-width: 760px) {
-  .bg-collage { grid-template-columns: 1fr; }
-  .bg-collage[data-n="3"] img:last-child { grid-column: auto; }
+  .bg-collage figure { width: 120px; padding: 6px 6px 20px; opacity: .9; }
+  .bg-collage figure:nth-child(1) { left: -18px; top: 52%; }
+  .bg-collage figure:nth-child(2) { right: -22px; top: 300px; }
+  .bg-collage figure:nth-child(3) { left: -14px; bottom: 30px; }
+  .bg-collage figure:nth-child(4) { right: -16px; bottom: 140px; }
 }
 .photos-btn {
   display: block;
@@ -180,14 +198,6 @@ body.palace {
   cursor: pointer;
 }
 .photos-btn:hover { background: rgba(158, 42, 43, .06); }
-body.palace::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(rgba(251, 246, 234, .78), rgba(251, 246, 234, .6));
-}
-
 button { font: inherit; cursor: pointer; }
 .btn-red {
   padding: 10px 18px;
