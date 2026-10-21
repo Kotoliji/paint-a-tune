@@ -1,6 +1,9 @@
 // Стена листочков: желания, ожидания и вопросы друг другу + ответы под ними
 const { t, store } = App;
 
+// старые ссылки «поделиться мелодией» вели на главную — отправляем их на paint.html
+if (/[#&]g=/.test(location.hash)) location.replace('paint.html' + location.hash);
+
 App.addText({
   zh: {
     pageTitle: '便签墙 · 我们的小院', wallTitle: '便签墙',
