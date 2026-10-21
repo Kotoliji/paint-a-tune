@@ -15,7 +15,7 @@ const App = (() => {
       synced: '☁ 已同步', local: '💾 只存在这台设备',
       gateTitle: '请输入密码', gateHint: '这是一个私密的小院，只有知道密码的人才能进来。',
       gatePh: '密码', gateBtn: '进入', gateWrong: '密码不对，再试一次', gateError: '连不上服务器，请检查网络',
-      logout: '退出这台设备',
+      logout: '退出这台设备', photos: '🖼 换背景照片（最多 4 张）', photosBusy: '上传中……',
     },
     en: {
       brand: 'Our Little Palace', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune',
@@ -23,7 +23,7 @@ const App = (() => {
       synced: '☁ Synced', local: '💾 This device only',
       gateTitle: 'Enter the password', gateHint: 'This is a private courtyard. Only people with the password can come in.',
       gatePh: 'Password', gateBtn: 'Enter', gateWrong: 'Wrong password, try again', gateError: "Can't reach the server, check your connection",
-      logout: 'Log out on this device',
+      logout: 'Log out on this device', photos: '🖼 Change background photos (up to 4)', photosBusy: 'Uploading…',
     },
   };
   const t = key => dict[lang][key] ?? key;
@@ -97,6 +97,8 @@ const App = (() => {
     await Promise.race([
       new Promise((ok, fail) => root.on('value', s => {
         data = s.val() || {};
+        showPhotos(data.photos); // фото фона лежат в той же защищённой паролем базе
+        delete data.photos;
         delete data.meta;
         ok();
         emit();
@@ -152,6 +154,42 @@ const App = (() => {
 
   const newId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 
+  // ---------- фон из наших фото (только после входа по паролю) ----------
+  let shownPhotos = '';
+  function showPhotos(photos) {
+    if (!document.body.classList.contains('palace')) return;
+    const urls = Object.keys(photos || {}).sort().map(k => photos[k])
+      .filter(u => typeof u === 'string' && u.startsWith('data:image/'));
+    const sig = urls.map(u => u.length + u.slice(-16)).join('|');
+    if (sig === shownPhotos) return;
+    shownPhotos = sig;
+    let bg = document.querySelector('.bg-collage');
+    if (!bg) {
+      bg = document.createElement('div');
+      bg.className = 'bg-collage';
+      bg.setAttribute('aria-hidden', 'true');
+      document.body.prepend(bg);
+    }
+    bg.dataset.n = urls.length;
+    bg.replaceChildren(...urls.map(u => { const img = new Image(); img.src = u; img.alt = ''; return img; }));
+  }
+
+  // фото уменьшаем в браузере до ~1000px, чтобы база не разрасталась
+  const shrink = file => new Promise((ok, fail) => {
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 1000 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * k);
+      c.height = Math.round(img.height * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      ok(c.toDataURL('image/jpeg', 0.8));
+    };
+    img.onerror = fail;
+    img.src = URL.createObjectURL(file);
+  });
+
   // ---------- верхнее меню ----------
   function nav() {
     const page = document.body.dataset.page;
@@ -187,6 +225,18 @@ const App = (() => {
       m.querySelector('.who-btns').append(b);
     }
     if (space) {
+      const pick = document.createElement('label');
+      pick.className = 'photos-btn';
+      pick.innerHTML = `<span>${t('photos')}</span><input type="file" accept="image/*" multiple hidden>`;
+      pick.querySelector('input').onchange = async e => {
+        const files = [...e.target.files].slice(0, 4);
+        if (!files.length) return;
+        pick.querySelector('span').textContent = t('photosBusy');
+        const urls = await Promise.all(files.map(shrink));
+        await store.set('photos', Object.fromEntries(urls.map((u, i) => ['p' + (i + 1), u])));
+        m.remove();
+      };
+      m.querySelector('.who-card').append(pick);
       const out = document.createElement('button');
       out.className = 'logout';
       out.textContent = t('logout');

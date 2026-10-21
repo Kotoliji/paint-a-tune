@@ -2,7 +2,7 @@
 
 A small site for two people, Chinese by default with an English toggle. Three pages:
 
-- **Notes** (`index.html`) — sticky notes over a Forbidden City photo. Each note has a big title and small text, its own note and text color. Answer under any note in one of 5 colors.
+- **Notes** (`index.html`) — sticky notes over a collage of our photos. Each note has a big title and small text, its own note and text color. Answer under any note in one of 5 colors.
 - **Tier list** (`tier.html`) — drag 30 activities (camping, tea ceremony, pottery…) into 5 tiers: LOVE IT / Like it / Don't mind / If you want / NO. Press Match when everything is placed. Open your partner's list side by side, add your own cards.
 - **Paint a tune** (`paint.html`) — paint tiles on a grid and hear them play as handpan or xylophone.
 
@@ -20,4 +20,3 @@ Without setup, data stays in the browser of one device. To share it, create a fr
 
 Anyone who knows the database URL can read and write it, so keep nothing secret there.
 
-Photo: Peter Zhou / Unsplash.
