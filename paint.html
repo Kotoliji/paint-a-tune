@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>给 Liu Wanqing 的旋律</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="paint">
+  <main class="app">
+    <section class="board">
+      <div class="head">
+        <h1 data-i18n="h1">给 Liu Wanqing 画一段旋律。</h1>
+      </div>
+      <p class="sub" data-i18n="sub">点亮方块，听听它的声音。</p>
+      <div id="grid" class="grid"></div>
+      <div class="axis"><span data-i18n="time">时间 →</span><span data-i18n="pitch">高 ↑ · 低 ↓</span></div>
+      <div class="controls">
+        <button id="play" class="primary">▶ 播放</button>
+        <button id="clear" data-i18n="clear">清空</button>
+        <label><span data-i18n="sound">音色</span>
+          <select id="sound">
+            <option value="handpan" data-i18n="handpan">手碟</option>
+            <option value="xylo" data-i18n="xylo">木琴</option>
+          </select>
+        </label>
+        <label class="tempo"><span data-i18n="tempo">速度</span>
+          <input id="tempo" type="range" min="60" max="260" value="150">
+          <span id="bpm">150</span>
+        </label>
+      </div>
+    </section>
+
+    <aside class="side">
+      <h2 data-i18n="templates">模板</h2>
+      <div class="save">
+        <input id="name" data-i18n-ph="namePh" placeholder="名称" maxlength="30">
+        <button id="save" data-i18n="save">保存</button>
+      </div>
+      <button id="share" class="wide" data-i18n="share">🔗 分享链接</button>
+      <p id="note" class="note" data-i18n="sharedNote" hidden>这里的模板是共享的：打开这个页面的人都能看到。</p>
+      <p id="msg" class="msg"></p>
+      <ul id="list" class="list"></ul>
+    </aside>
+  </main>
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

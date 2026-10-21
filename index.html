@@ -3,47 +3,45 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>给 Liu Wanqing 的旋律</title>
-  <link rel="stylesheet" href="style.css">
+  <title>便签墙 · 我们的小院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="notes.css">
 </head>
-<body>
-  <main class="app">
-    <section class="board">
-      <div class="head">
-        <h1 data-i18n="h1">给 Liu Wanqing 画一段旋律。</h1>
-        <button id="lang" class="lang">EN</button>
+<body data-page="notes" class="palace">
+  <main class="wall">
+    <header class="wall-head">
+      <div>
+        <h1 data-i18n="wallTitle">便签墙</h1>
+        <p data-i18n="wallSub"></p>
       </div>
-      <p class="sub" data-i18n="sub">点亮方块，听听它的声音。</p>
-      <div id="grid" class="grid"></div>
-      <div class="axis"><span data-i18n="time">时间 →</span><span data-i18n="pitch">高 ↑ · 低 ↓</span></div>
-      <div class="controls">
-        <button id="play" class="primary">▶ 播放</button>
-        <button id="clear" data-i18n="clear">清空</button>
-        <label><span data-i18n="sound">音色</span>
-          <select id="sound">
-            <option value="handpan" data-i18n="handpan">手碟</option>
-            <option value="xylo" data-i18n="xylo">木琴</option>
-          </select>
-        </label>
-        <label class="tempo"><span data-i18n="tempo">速度</span>
-          <input id="tempo" type="range" min="60" max="260" value="150">
-          <span id="bpm">150</span>
-        </label>
-      </div>
-    </section>
-
-    <aside class="side">
-      <h2 data-i18n="templates">模板</h2>
-      <div class="save">
-        <input id="name" data-i18n-ph="namePh" placeholder="名称" maxlength="30">
-        <button id="save" data-i18n="save">保存</button>
-      </div>
-      <button id="share" class="wide" data-i18n="share">🔗 分享链接</button>
-      <p id="note" class="note" data-i18n="sharedNote" hidden>这里的模板是共享的：打开这个页面的人都能看到。</p>
-      <p id="msg" class="msg"></p>
-      <ul id="list" class="list"></ul>
-    </aside>
+      <button id="add" class="btn-red" data-i18n="newNote">＋ 新便签</button>
+    </header>
+    <div id="notes" class="notes"></div>
+    <p id="empty" class="empty" data-i18n="emptyWall" hidden></p>
   </main>
-  <script src="app.js"></script>
+
+  <div id="editor" class="modal" hidden>
+    <form id="form" class="sheet">
+      <h2 id="editHead"></h2>
+      <div id="pv" class="note preview">
+        <input id="fTitle" class="n-title" data-i18n-ph="titlePh" maxlength="60" autocomplete="off">
+        <textarea id="fBody" class="n-body" data-i18n-ph="bodyPh" rows="5" maxlength="1000"></textarea>
+      </div>
+      <div class="row"><span data-i18n="noteColor"></span><div id="noteColors" class="swatches"></div></div>
+      <div class="row"><span data-i18n="textColor"></span><div id="textColors" class="swatches"></div></div>
+      <div class="actions">
+        <button type="button" id="cancel" class="btn-soft" data-i18n="cancel"></button>
+        <button type="submit" class="btn-red" data-i18n="save"></button>
+      </div>
+    </form>
+  </div>
+
+  <a class="credit" href="https://unsplash.com/photos/red-and-white-temple-under-blue-sky-during-daytime-Uk19VsygF9Y" target="_blank" rel="noopener">Photo: Peter Zhou / Unsplash</a>
+
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="notes.js"></script>
 </body>
 </html>

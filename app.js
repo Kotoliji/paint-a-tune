@@ -387,14 +387,9 @@ function applyLang() {
   document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
   document.querySelectorAll('[data-i18n-ph]').forEach(el => el.placeholder = t(el.dataset.i18nPh));
   $('play').textContent = t(playing ? 'stop' : 'play');
-  $('lang').textContent = lang === 'zh' ? 'EN' : '中文';
   renderList();
 }
-$('lang').onclick = () => {
-  lang = lang === 'zh' ? 'en' : 'zh';
-  try { localStorage.setItem('paint-a-tune-lang', lang); } catch {}
-  applyLang();
-};
+// язык переключается в верхнем меню (common.js)
 
 applyLang();
 openShared();
