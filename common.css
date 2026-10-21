@@ -150,45 +150,91 @@ body.palace {
   min-height: 100vh;
   font-family: var(--body-font);
   color: var(--ink);
-  background: linear-gradient(160deg, #d8ecfb 0%, #b7dcf6 55%, #a3cff0 100%) fixed;
+  background:
+    radial-gradient(ellipse at 18% 22%, rgba(255, 255, 255, .55), transparent 55%),
+    radial-gradient(ellipse at 82% 78%, rgba(226, 210, 255, .55), transparent 50%),
+    radial-gradient(ellipse at 70% 10%, rgba(255, 222, 238, .35), transparent 45%),
+    linear-gradient(165deg, #cfe7fb 0%, #a9d2f2 55%, #8fc0ea 100%) fixed;
 }
 
-/* фон — наши фото, разбросанные по голубому как полароиды; появляются только после входа по паролю */
+/* фон: частицы (canvas) и наши фото парами — их рисует bg.js, фото только после входа по паролю */
+.bg-particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none; }
 .bg-collage { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 .bg-collage figure {
   position: absolute;
-  width: clamp(120px, 17vw, 270px);
   margin: 0;
-  padding: 10px 10px 34px;
   background: #fff;
-  box-shadow: 0 12px 28px rgba(20, 60, 100, .25);
-  rotate: var(--r);
+  box-shadow: 0 14px 30px rgba(20, 60, 110, .22);
+  rotate: var(--r, 0deg);
+  animation: bob 11s ease-in-out infinite alternate;
 }
 .bg-collage figure::before { /* скотч */
   content: "";
   position: absolute;
-  top: -10px;
+  top: -8%;
   left: 50%;
-  width: 70px;
-  height: 20px;
+  width: 34%;
+  height: 9%;
   translate: -50% 0;
   background: rgba(255, 255, 255, .6);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
 }
 .bg-collage img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 30%; }
-.bg-collage figure:nth-child(1) { left: 1.5%; top: 34%; --r: -8deg; }
-.bg-collage figure:nth-child(2) { right: 2%; top: 25%; --r: 7deg; }
-.bg-collage figure:nth-child(3) { left: 4%; bottom: 3%; --r: 5deg; }
-.bg-collage figure:nth-child(4) { right: 4%; bottom: 2%; --r: -6deg; }
-@media (max-width: 760px) {
-  .bg-collage figure { width: 120px; padding: 6px 6px 20px; opacity: .9; }
-  .bg-collage figure:nth-child(1) { left: -18px; top: 52%; }
-  .bg-collage figure:nth-child(2) { right: -22px; top: 300px; }
-  .bg-collage figure:nth-child(3) { left: -14px; bottom: 30px; }
-  .bg-collage figure:nth-child(4) { right: -16px; bottom: 140px; }
+@keyframes bob { to { translate: 0 -9px; } }
+@media (prefers-reduced-motion: reduce) { .bg-collage figure { animation: none; } }
+
+/* окно «наши фото» */
+.mgr-card {
+  width: min(560px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 24px;
+  border-radius: 18px;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
+.mgr-card h2 { margin: 0; font-family: var(--title-font); font-weight: 400; font-size: 32px; color: var(--palace); }
+.mgr-hint { margin: 0; font-size: 14px; color: #5d524b; }
+.thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; border-radius: 12px; background: rgba(158, 42, 43, .07); }
+.thumb { position: relative; }
+.thumb img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; }
+.thumb .n {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .55);
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+.thumb-tools { position: absolute; right: 4px; bottom: 4px; display: flex; gap: 3px; }
+.thumb-tools button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  color: var(--ink);
+  font-size: 12px;
+  cursor: pointer;
+}
+.thumb-tools button:hover { background: #fff; color: var(--palace); }
+.mgr-empty { grid-column: 1 / -1; margin: 10px 0; color: #5d524b; }
+.mgr-busy { margin: 0; color: var(--palace); font-size: 14px; }
+.mgr-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.mgr-add { cursor: pointer; }
 .photos-btn {
   display: block;
+  width: 100%;
+  background: transparent;
+  font: inherit;
   margin-top: 16px;
   padding: 10px;
   border: 1px dashed var(--palace);
