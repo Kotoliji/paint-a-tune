@@ -14,7 +14,6 @@ const I18N = {
     templates: '模板', namePh: '名称', save: '保存', share: '🔗 分享链接', examples: '示例',
     untitled: '未命名', del: '删除', empty: '先画点什么吧 🙂', saved: '已保存 ✓',
     copied: '链接已复制，发给朋友吧 💌', copyPrompt: '复制这个链接：', received: '有人给你发了一段旋律，点 ▶ 播放',
-    sharedNote: '这里的模板是共享的：打开这个页面的人都能看到。', failed: '没保存成功：你可能只有查看权限。',
     heart: '爱心', smile: '笑脸', wave: '波浪', stairs: '阶梯',
   },
   en: {
@@ -24,7 +23,6 @@ const I18N = {
     templates: 'Templates', namePh: 'Name', save: 'Save', share: '🔗 Share link', examples: 'Examples',
     untitled: 'Untitled', del: 'Delete', empty: 'Draw something first 🙂', saved: 'Saved ✓',
     copied: 'Link copied — send it 💌', copyPrompt: 'Copy this link:', received: 'Someone sent you a tune — press ▶',
-    sharedNote: 'Templates here are shared: everyone who opens this page sees them.', failed: "Couldn't save: you may only have view access.",
     heart: 'Heart', smile: 'Smiley', wave: 'Wave', stairs: 'Stairs',
   },
 };
@@ -264,9 +262,21 @@ const EXAMPLES = [
   ['stairs', fromLine(c => 15 - c % 16)],
 ].map(([name, g]) => ({ name, code: encode(g) }));
 
-let mine = [];
-try { mine = JSON.parse(localStorage.getItem(STORE)) || []; } catch {}
-const persist = () => { try { localStorage.setItem(STORE, JSON.stringify(mine)); } catch {} };
+// шаблоны общие: лежат в той же базе, что и листочки (App.store, под паролем)
+let tunes = [], loaded = false, incoming = null;
+const saveTune = (id, tune) => App.store.set('tunes/' + id, tune);
+
+// шаблоны, сохранённые раньше только в браузере, один раз переносим в общий список
+function migrateLocal() {
+  let old = [];
+  try { old = JSON.parse(localStorage.getItem(STORE)) || []; } catch {}
+  old.reverse().forEach((tpl, i) => {
+    if (tpl && typeof tpl.code === 'string' && decode(tpl.code)) {
+      saveTune(App.newId(), { name: String(tpl.name || t('untitled')).slice(0, 40), code: tpl.code, author: App.me, at: Date.now() - old.length + i });
+    }
+  });
+  try { localStorage.removeItem(STORE); } catch {}
+}
 
 let msgTimer;
 function say(text) {
@@ -288,9 +298,6 @@ function preview(g) {
   });
   return cv;
 }
-
-// на claude.ai шаблоны общие (db): их видят все, кто открыл страницу
-let shared = null, sharedList = [];
 
 function renderList() {
   const list = $('list');
@@ -315,8 +322,7 @@ function renderList() {
     }
     list.append(li);
   };
-  if (shared) sharedList.forEach(tpl => add(tpl, () => shared.doc(tpl.id).delete().catch(() => say(t('failed')))));
-  else mine.forEach((tpl, i) => add(tpl, () => { mine.splice(i, 1); persist(); renderList(); }));
+  tunes.forEach(tpl => add(tpl, () => saveTune(tpl.id, null)));
   const title = document.createElement('li');
   title.className = 'title';
   title.textContent = t('examples');
@@ -326,35 +332,13 @@ function renderList() {
 
 const isEmpty = () => !grid.some(Boolean);
 
-$('save').onclick = async () => {
+$('save').onclick = () => {
   if (isEmpty()) return say(t('empty'));
   const name = $('name').value.trim() || t('untitled');
-  const code = encode(grid);
-  if (shared) {
-    const old = sharedList.find(tpl => tpl.name === name);
-    try {
-      await (old ? shared.doc(old.id) : shared.doc()).set({ name, code, at: Date.now() });
-      say(t('saved'));
-    } catch { say(t('failed')); }
-    return;
-  }
-  mine = mine.filter(tpl => tpl.name !== name);
-  mine.unshift({ name, code });
-  persist();
-  renderList();
+  const old = tunes.find(tpl => tpl.name === name); // то же имя — перезаписываем
+  saveTune(old ? old.id : App.newId(), { name, code: encode(grid), author: App.me, at: Date.now() });
   say(t('saved'));
 };
-
-async function connectShared() {
-  const db = await window.claude.use('db');
-  if (!db) return;
-  shared = db.collection('tunes');
-  $('note').hidden = false;
-  shared.orderBy('at', 'desc').limit(200).onSnapshot(snap => {
-    sharedList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderList();
-  }, () => { shared = null; $('note').hidden = true; renderList(); });
-}
 
 $('share').onclick = () => {
   if (isEmpty()) return say(t('empty'));
@@ -364,20 +348,21 @@ $('share').onclick = () => {
   copied.then(() => say(t('copied')), () => prompt(t('copyPrompt'), url));
 };
 
-// открыли ссылку от друга → показываем рисунок и кладём его в «Шаблоны»
+// открыли ссылку от друга → показываем рисунок и кладём его в общие «Шаблоны»
 function openShared() {
   const p = new URLSearchParams(location.hash.slice(1));
   const g = p.get('g') && decode(p.get('g'));
   if (!g) return;
-  const code = encode(g);
-  if (!mine.some(tpl => tpl.code === code)) {
-    mine.unshift({ name: '💌 ' + (p.get('n') || t('untitled')).slice(0, 30), code });
-    persist();
-  }
+  incoming = { name: '💌 ' + (p.get('n') || t('untitled')).slice(0, 30), code: encode(g) };
   setGrid(g);
-  renderList();
   history.replaceState(null, '', location.pathname + location.search);
   say(t('received'));
+  if (loaded) addIncoming();
+}
+function addIncoming() { // ждём загрузки списка, чтобы не добавить дубликат
+  const x = incoming;
+  incoming = null;
+  if (!tunes.some(tpl => tpl.code === x.code)) saveTune(App.newId(), { ...x, author: App.me, at: Date.now() });
 }
 window.addEventListener('hashchange', openShared);
 
@@ -391,8 +376,15 @@ function applyLang() {
 }
 // язык переключается в верхнем меню (common.js)
 
+App.store.on(data => {
+  tunes = Object.entries(data.tunes || {})
+    .map(([id, v]) => ({ id, ...v }))
+    .sort((a, b) => (b.at || 0) - (a.at || 0));
+  if (!loaded) { loaded = true; migrateLocal(); }
+  if (incoming) addIncoming();
+  renderList();
+});
+
 applyLang();
 openShared();
-// внутри claude.ai ссылки с #... не доходят до страницы, там вместо них общий список
-if (window.claude?.use) { $('share').hidden = true; connectShared(); }
 if (isEmpty()) setGrid(decode(EXAMPLES[0].code));
