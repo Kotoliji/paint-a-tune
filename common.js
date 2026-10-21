@@ -13,11 +13,17 @@ const App = (() => {
       brand: '小小紫禁城', navNotes: '便签墙', navTier: '兴趣榜', navPaint: '画旋律',
       whoAmI: '你是谁？', whoHint: '选一次就好，这台设备会记住。',
       synced: '☁ 已同步', local: '💾 只存在这台设备',
+      gateTitle: '请输入密码', gateHint: '这是一个私密的小院，只有知道密码的人才能进来。',
+      gatePh: '密码', gateBtn: '进入', gateWrong: '密码不对，再试一次', gateError: '连不上服务器，请检查网络',
+      logout: '退出这台设备',
     },
     en: {
       brand: 'Our Little Palace', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune',
       whoAmI: 'Who are you?', whoHint: 'Pick once, this device will remember.',
       synced: '☁ Synced', local: '💾 This device only',
+      gateTitle: 'Enter the password', gateHint: 'This is a private courtyard. Only people with the password can come in.',
+      gatePh: 'Password', gateBtn: 'Enter', gateWrong: 'Wrong password, try again', gateError: "Can't reach the server, check your connection",
+      logout: 'Log out on this device',
     },
   };
   const t = key => dict[lang][key] ?? key;
@@ -69,26 +75,74 @@ const App = (() => {
     document.head.append(s);
   });
 
-  async function firebaseStore() {
+  // Пароль нигде не хранится: из него считается SHA-256, и это имя раздела в базе.
+  // Правила базы запрещают смотреть список разделов, так что без пароля данные не найти.
+  const KEY_KEY = 'courtyard-key';
+  const spaceOf = async pw => {
+    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('our-little-palace:' + pw));
+    return [...new Uint8Array(bytes)].map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+  const spaceExists = async space => {
+    const r = await fetch(`${CFG.firebase.databaseURL}/spaces/${space}/meta.json`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return (await r.json()) !== null;
+  };
+
+  async function firebaseStore(space) {
     const base = 'https://www.gstatic.com/firebasejs/10.14.1/';
     await script(base + 'firebase-app-compat.js');
     await script(base + 'firebase-database-compat.js');
     firebase.initializeApp(CFG.firebase);
-    const db = firebase.database();
+    const root = firebase.database().ref('spaces/' + space);
     await Promise.race([
-      new Promise((ok, fail) => db.ref('/').on('value', s => { data = s.val() || {}; ok(); emit(); }, fail)),
-      new Promise((_, fail) => setTimeout(() => fail(new Error('timeout')), 10000)),
+      new Promise((ok, fail) => root.on('value', s => {
+        data = s.val() || {};
+        delete data.meta;
+        ok();
+        emit();
+      }, fail)),
+      new Promise((_, fail) => setTimeout(() => fail(new Error('timeout')), 15000)),
     ]);
     synced = true;
     return {
-      set: (path, value) => db.ref(path).set(value),
-      update: (path, obj) => db.ref(path).update(obj),
+      set: (path, value) => root.child(path).set(value),
+      update: (path, obj) => root.child(path).update(obj),
     };
   }
 
-  const ready = CFG.firebase && CFG.firebase.databaseURL
-    ? firebaseStore().catch(err => { console.warn('Firebase недоступен, работаем локально', err); return localStore(); })
-    : Promise.resolve().then(localStore);
+  const space = read(KEY_KEY);
+  const locked = !!(CFG.firebase && CFG.firebase.databaseURL) && !space;
+  const ready = !CFG.firebase || !CFG.firebase.databaseURL
+    ? Promise.resolve().then(localStore)
+    : locked
+      ? new Promise(() => {}) // ждём пароль — без него данных нет
+      : firebaseStore(space).catch(err => { console.warn('Firebase недоступен, работаем локально', err); return localStore(); });
+
+  function gate() {
+    const m = document.createElement('div');
+    m.className = 'who-modal gate';
+    m.innerHTML = `<form class="who-card"><h2>🔒 ${t('gateTitle')}</h2><p>${t('gateHint')}</p>
+      <input type="password" class="gate-input" autocomplete="current-password" placeholder="${t('gatePh')}" required>
+      <p class="gate-msg" hidden></p>
+      <button type="submit" class="gate-btn">${t('gateBtn')}</button></form>`;
+    const form = m.querySelector('form'), input = m.querySelector('input'), msg = m.querySelector('.gate-msg');
+    form.onsubmit = async e => {
+      e.preventDefault();
+      msg.hidden = true;
+      try {
+        const s = await spaceOf(input.value.trim());
+        if (!(await spaceExists(s))) throw new Error('wrong');
+        write(KEY_KEY, s);
+        location.reload();
+      } catch (err) {
+        msg.textContent = t(err.message === 'wrong' ? 'gateWrong' : 'gateError');
+        msg.hidden = false;
+        input.select();
+      }
+    };
+    document.body.append(m);
+    input.focus();
+  }
 
   const store = {
     on(fn) { subs.push(fn); if (loaded) fn(data); },
@@ -132,13 +186,21 @@ const App = (() => {
       b.onclick = () => { write(ME_KEY, id); location.reload(); };
       m.querySelector('.who-btns').append(b);
     }
+    if (space) {
+      const out = document.createElement('button');
+      out.className = 'logout';
+      out.textContent = t('logout');
+      out.onclick = () => { try { localStorage.removeItem(KEY_KEY); } catch {} location.reload(); };
+      m.querySelector('.who-card').append(out);
+    }
     if (me) m.onclick = e => { if (e.target === m) m.remove(); };
     document.body.append(m);
   }
 
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
   nav();
-  if (!me) pickMe();
+  if (locked) gate();
+  else if (!me) pickMe();
 
   return {
     t, addText, translate, lang, names, store, newId,

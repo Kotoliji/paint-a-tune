@@ -95,6 +95,45 @@
   cursor: pointer;
 }
 .who-btns button:hover, .who-btns button.on { background: var(--palace); color: #fff; }
+.logout {
+  margin-top: 16px;
+  padding: 4px 8px;
+  border: 0;
+  background: transparent;
+  color: #7a6f66;
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* вход по паролю */
+.gate { background: rgba(30, 20, 15, .78); backdrop-filter: blur(6px); }
+.gate .who-card { display: flex; flex-direction: column; gap: 10px; }
+.gate .who-card p { margin: 0 0 6px; }
+.gate-input {
+  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 17px;
+  text-align: center;
+  letter-spacing: .08em;
+}
+.gate-input:focus { outline: none; border-color: var(--palace); }
+.gate .gate-msg { color: var(--palace); font-size: 14px; }
+.gate-btn {
+  padding: 12px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--palace);
+  color: #fff;
+  font: inherit;
+  font-size: 17px;
+  cursor: pointer;
+}
 
 @media (max-width: 560px) {
   .topnav .brand { font-size: 22px; }
