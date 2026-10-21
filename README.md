@@ -1,4 +1,4 @@
-# Our Courtyard · 我们的小院
+# Our Little Palace · 小小紫禁城
 
 A small site for two people, Chinese by default with an English toggle. Three pages:
 

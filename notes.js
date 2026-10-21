@@ -6,7 +6,7 @@ if (/[#&]g=/.test(location.hash)) location.replace('paint.html' + location.hash)
 
 App.addText({
   zh: {
-    pageTitle: '便签墙 · 我们的小院', wallTitle: '便签墙',
+    pageTitle: '便签墙 · 小小紫禁城', wallTitle: '便签墙',
     wallSub: '写下对彼此的愿望、期待和问题，在便签下面就能回答。',
     newNote: '＋ 新便签', editNew: '新便签', editOld: '修改便签',
     titlePh: '标题', bodyPh: '想说的话……', noteColor: '便签颜色', textColor: '文字颜色',
@@ -15,7 +15,7 @@ App.addText({
     emptyWall: '墙上还空着，点「＋ 新便签」贴第一张吧。',
   },
   en: {
-    pageTitle: 'Notes · Our Courtyard', wallTitle: 'Our notes',
+    pageTitle: 'Notes · Our Little Palace', wallTitle: 'Our notes',
     wallSub: 'Write wishes, expectations and questions for each other. Answer right under each note.',
     newNote: '＋ New note', editNew: 'New note', editOld: 'Edit note',
     titlePh: 'Title', bodyPh: 'What do you want to say…', noteColor: 'Note color', textColor: 'Text color',
@@ -213,7 +213,7 @@ store.on(data => {
     seeding = true;
     store.set('seeded', true);
     store.set('notes/welcome', {
-      title: '欢迎来到我们的小院 ✿',
+      title: '欢迎来到小小紫禁城 ✿',
       body: '在这里写下愿望、期待和问题，下面就能回答。\nWrite wishes, expectations and questions here, and answer right below.',
       noteColor: NOTE_COLORS[1], textColor: TEXT_COLORS[1], author: 'a', at: Date.now(),
     });

@@ -25,7 +25,7 @@ const TIERS = [ // фон, цвет текста
 
 App.addText({
   zh: {
-    pageTitle: '兴趣榜 · 我们的小院', tierTitle: '兴趣榜',
+    pageTitle: '兴趣榜 · 小小紫禁城', tierTitle: '兴趣榜',
     rules: '规则：把所有卡片拖到对应的等级里，然后点「配对」。',
     t0: '超爱！', t1: '喜欢', t2: '无所谓', t3: '你想的话', t4: '不要！',
     match: '💞 配对', showOther: '👀 看 {name} 的', hideOther: '收起 {name} 的',
@@ -34,7 +34,7 @@ App.addText({
     matchSub: '完美！你们简直是天生一对 💕', yay: '好耶！', del: '删除',
   },
   en: {
-    pageTitle: 'Tier list · Our Courtyard', tierTitle: 'Interest tier list',
+    pageTitle: 'Tier list · Our Little Palace', tierTitle: 'Interest tier list',
     rules: 'Rules: drag every card into a tier, then press Match.',
     t0: 'LOVE IT!', t1: 'Like it', t2: "Don't mind", t3: 'If you want', t4: 'NO!',
     match: '💞 Match', showOther: "👀 See {name}'s", hideOther: "Hide {name}'s",

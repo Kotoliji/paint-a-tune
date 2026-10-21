@@ -10,12 +10,12 @@ const App = (() => {
   const lang = read(LANG_KEY) === 'en' ? 'en' : 'zh';
   const dict = {
     zh: {
-      brand: '我们的小院', navNotes: '便签墙', navTier: '兴趣榜', navPaint: '画旋律',
+      brand: '小小紫禁城', navNotes: '便签墙', navTier: '兴趣榜', navPaint: '画旋律',
       whoAmI: '你是谁？', whoHint: '选一次就好，这台设备会记住。',
       synced: '☁ 已同步', local: '💾 只存在这台设备',
     },
     en: {
-      brand: 'Our Courtyard', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune',
+      brand: 'Our Little Palace', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune',
       whoAmI: 'Who are you?', whoHint: 'Pick once, this device will remember.',
       synced: '☁ Synced', local: '💾 This device only',
     },
