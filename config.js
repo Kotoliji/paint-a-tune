@@ -3,7 +3,7 @@
 // firebase — ключи Firebase, чтобы вы видели данные друг друга (как получить — в README).
 // Пока firebase = null, всё хранится только в браузере на этом устройстве.
 window.CONFIG = {
-  names: { a: 'Kotoliji', b: 'Wanqing' },
+  names: { a: 'Kyrylo', b: 'Liu Wanqing' },
   firebase: null,
   // firebase: {
   //   apiKey: '...',
