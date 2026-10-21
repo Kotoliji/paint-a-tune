@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>兴趣榜 · 我们的小院</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="tier.css">
+</head>
+<body data-page="tier" class="palace">
+  <main class="tier-page">
+    <header class="tier-head">
+      <h1 data-i18n="tierTitle">兴趣榜</h1>
+      <p class="rules" data-i18n="rules"></p>
+    </header>
+
+    <div id="boards" class="boards">
+      <section id="mine" class="board">
+        <div class="board-head">
+          <h2 id="mineTitle"></h2>
+          <div class="acts">
+            <button type="button" id="toggle" class="btn-soft"></button>
+            <button type="button" id="match" class="btn-red" data-i18n="match"></button>
+          </div>
+        </div>
+        <div id="mineTiers" class="tiers"></div>
+        <div class="pool-wrap">
+          <div class="pool-head">
+            <span id="poolTitle"></span>
+            <form id="addForm" class="add-form">
+              <input id="newCard" maxlength="24" data-i18n-ph="addPh" autocomplete="off">
+              <button type="submit" class="btn-soft">＋</button>
+            </form>
+          </div>
+          <div id="pool" class="drop pool" data-tier=""></div>
+        </div>
+      </section>
+
+      <section id="theirs" class="board theirs" hidden>
+        <div class="board-head"><h2 id="theirTitle"></h2></div>
+        <div id="theirTiers" class="tiers"></div>
+        <p id="theirNote" class="their-note"></p>
+      </section>
+    </div>
+  </main>
+
+  <div id="matchModal" class="modal" hidden>
+    <div class="match-card">
+      <div class="hearts" aria-hidden="true"><span>💗</span><span>💞</span><span>💖</span><span>💕</span><span>💘</span></div>
+      <h2>MATCH 100%</h2>
+      <p data-i18n="matchSub"></p>
+      <button type="button" id="yay" class="btn-red" data-i18n="yay"></button>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+
+  <a class="credit" href="https://unsplash.com/photos/red-and-white-temple-under-blue-sky-during-daytime-Uk19VsygF9Y" target="_blank" rel="noopener">Photo: Peter Zhou / Unsplash</a>
+
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="tier.js"></script>
+</body>
+</html>

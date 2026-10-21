@@ -1,43 +1,4 @@
-/* фон: фото дворца под полупрозрачной «рисовой бумагой», сверху сетка листочков */
-* { box-sizing: border-box; }
-
-body.palace {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--body-font);
-  color: var(--ink);
-  background: var(--paper);
-}
-body.palace::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background: url("https://images.unsplash.com/photo-1590301729964-23833732ee04?auto=format&fit=crop&w=1920&q=70") center / cover;
-}
-body.palace::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(rgba(251, 246, 234, .78), rgba(251, 246, 234, .6));
-}
-
-button { font: inherit; cursor: pointer; }
-.btn-red {
-  padding: 10px 18px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--palace);
-  color: #fff;
-  font-size: 15px;
-  box-shadow: 0 3px 0 #6e1c1d;
-}
-.btn-red:hover { filter: brightness(1.08); }
-.btn-red:active { transform: translateY(2px); box-shadow: 0 1px 0 #6e1c1d; }
-.btn-soft { padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--ink); }
-button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--palace); outline-offset: 2px; }
-
+/* стена: сетка листочков поверх фото дворца (фон и кнопки — в common.css) */
 .wall {
   max-width: 1240px;
   margin: 0 auto;
@@ -174,16 +135,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px
 .dot.on { box-shadow: 0 0 0 2px var(--ink); }
 
 /* --- окно создания листочка --- */
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 80;
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  overflow-y: auto;
-  background: rgba(30, 20, 15, .5);
-}
 .sheet {
   width: min(460px, 100%);
   padding: 24px;
@@ -217,15 +168,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px
 }
 .swatch.on { box-shadow: 0 0 0 3px var(--palace); }
 .actions { display: flex; justify-content: flex-end; gap: 10px; }
-
-.credit {
-  position: fixed;
-  right: max(10px, env(safe-area-inset-right, 0px));
-  bottom: max(8px, env(safe-area-inset-bottom, 0px));
-  font-size: 11px;
-  color: rgba(43, 35, 32, .55);
-  text-decoration: none;
-}
 
 @media (max-width: 560px) {
   .wall-head h1 { font-size: 44px; }
