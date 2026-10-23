@@ -100,29 +100,108 @@
   font-size: 14px;
   line-height: 1.45;
 }
-.answers li { overflow-wrap: anywhere; }
+.answers li { overflow-wrap: anywhere; white-space: pre-wrap; }
 .answers .a-del { font-size: 11px; opacity: 0; }
 .answers li:hover .a-del { opacity: .55; }
 
-.reply {
+/* --- на стене все листочки одного размера: длинный текст плавно обрезается --- */
+.notes .note {
+  height: 320px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: pointer;
+}
+.notes .n-title {
+  flex-shrink: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.notes .n-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(#000 60%, transparent);
+  mask-image: linear-gradient(#000 60%, transparent);
+}
+.notes .n-meta { flex-shrink: 0; }
+.n-last {
+  flex-shrink: 0;
+  margin: 8px 0 0;
   padding-top: 8px;
   border-top: 1px dashed rgba(0, 0, 0, .2);
-}
-.reply input {
-  flex: 1;
-  min-width: 0;
-  padding: 6px 2px;
-  border: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, .2);
-  background: transparent;
-  font: inherit;
   font-size: 14px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.reply input::placeholder { color: rgba(0, 0, 0, .4); }
+.n-foot {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 13px;
+  opacity: .7;
+}
+.notes .note:hover .n-open, .notes .note:focus-visible .n-open { text-decoration: underline; opacity: 1; }
+.notes .note:focus-visible { outline: 3px solid var(--palace); outline-offset: 3px; }
+
+/* --- раскрытый листочек: на весь экран, без ограничений по тексту --- */
+body.no-scroll { overflow: hidden; }
+.viewer { z-index: 70; place-items: start center; padding-block: 6vh; }
+.note.big {
+  width: min(820px, 100%);
+  padding: 40px 34px 26px;
+  transform: none;
+  cursor: auto;
+}
+.note.big .n-title { margin-right: 90px; font-size: 46px; }
+.note.big .n-body { font-size: 17px; line-height: 1.65; }
+.note.big .answers { font-size: 16px; gap: 10px; }
+.note.big .answers .a-del { opacity: .4; }
+.v-bar { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 4px; }
+.note.big .n-tools { position: static; opacity: 1; }
+.v-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .08);
+  color: inherit;
+  font-size: 16px;
+}
+.v-close:hover { background: rgba(0, 0, 0, .16); }
+
+.reply {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(0, 0, 0, .2);
+}
+.reply textarea {
+  width: 100%;
+  min-height: 84px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .55);
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  resize: none;
+  overflow: hidden;
+}
+.reply textarea::placeholder { color: rgba(0, 0, 0, .4); }
+.reply-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .dots { display: flex; gap: 4px; }
 .dot {
   width: 14px;
@@ -172,7 +251,12 @@
 @media (max-width: 560px) {
   .wall-head h1 { font-size: 44px; }
   .notes { grid-template-columns: minmax(0, 1fr); }
+  .notes .note { height: 260px; }
   .n-tools { opacity: 1; }
+  .viewer { padding: 0; }
+  .note.big { min-height: 100%; padding: 56px 18px 22px; border-radius: 0; }
+  .note.big::before { display: none; }
+  .note.big .n-title { margin-right: 0; font-size: 34px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .note, .n-tools { transition: none; }
