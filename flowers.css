@@ -1,0 +1,64 @@
+.flower-page {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: #fff8f1;
+  background: radial-gradient(ellipse at 50% 42%, #27203e 0%, #151125 42%, #0b0918 80%);
+  font-family: "Noto Serif SC", "Songti SC", serif;
+}
+.flower-page .topnav { background: rgba(251,246,234,.96); }
+.night-sky { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.flower-main { position: relative; isolation: isolate; width: min(1160px,100%); margin: auto; padding: 40px 34px 48px; }
+.flower-main::before { content: ""; position: absolute; z-index: -1; top: 10%; left: 6%; right: 6%; height: 66%; background: radial-gradient(ellipse,rgba(213,92,147,.12),transparent 68%); pointer-events: none; }
+.opening { display:flex; align-items:center; gap:12px; color:#d6a6b9; font: 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; letter-spacing:.24em; text-transform:uppercase; opacity:.78; }
+.opening .line { width:40px; height:1px; background:currentColor; }
+.flower-head { text-align:center; padding-top:12px; }
+.overline { color:#f2b7cf; letter-spacing:.45em; font-size:12px; margin:0 0 18px; }
+.flower-head h1 { margin:0; font-family:"Ma Shan Zheng","STKaiti",serif; font-size:clamp(50px,7vw,88px); font-weight:400; line-height:1.2; letter-spacing:.07em; text-shadow:0 0 32px rgba(255,158,204,.32); }
+.asterisk { display:inline-block; color:#ffbfd8; font-size:.48em; vertical-align:top; transform:translateY(.2em); animation:starPulse 3s ease-in-out infinite; }
+.flower-sub { color:rgba(255,239,236,.65); font-size:14px; letter-spacing:.08em; line-height:1.9; margin:6px 0 0; }
+.scene { position:relative; width:min(900px,100%); margin:-28px auto -58px; }
+.scene-glow { position:absolute; inset:15% 12% 4%; border-radius:50%; background:radial-gradient(ellipse,rgba(244,135,183,.18) 0%,rgba(113,71,160,.08) 40%,transparent 70%); filter:blur(25px); pointer-events:none; animation:starPulse 6s ease-in-out infinite; }
+#bouquet { display:block; width:100%; overflow:visible; position:relative; filter:drop-shadow(0 5px 25px rgba(244,112,163,.14)); }
+#bouquet .stem { fill:none; stroke:url(#stemGradient); stroke-width:6; stroke-linecap:round; }
+#bouquet .stem.fine { stroke-width:4; }
+#bouquet .leaf { fill:url(#leafGradient); stroke:#315f48; stroke-width:1.5; }
+#bouquet .flower { transform-box:fill-box; transform-origin:center; }
+#bouquet .rose-outer { fill:url(#roseOuter); stroke:#a94370; stroke-width:1.3; }
+#bouquet .rose-mid { fill:url(#roseMiddle); stroke:#ad476d; stroke-width:1.1; }
+#bouquet .rose-inner { fill:url(#roseInner); stroke:#a64169; stroke-width:1; }
+#bouquet .rose-core { fill:#ffccdc; stroke:#b4476e; stroke-width:2.2; }
+#bouquet .plumeria-petal { fill:url(#plumeriaPetal); stroke:#dcd7df; stroke-width:1.3; }
+#bouquet .plumeria-core { fill:#f8d48b; filter:url(#softGlow); }
+#bouquet .sparkle { fill:#fff3ce; filter:url(#softGlow); }
+.name-plaque { position:absolute; left:50%; bottom:6.5%; translate:-50% 0; display:flex; align-items:center; gap:17px; text-align:center; white-space:nowrap; text-shadow:0 0 25px #ed98c0; animation:nameReveal 1.2s 3.5s both; }
+.name-plaque strong { font:400 clamp(30px,5vw,55px)/1.25 "Ma Shan Zheng","STKaiti",serif; letter-spacing:.22em; color:#fff4e9; }
+.name-label { display:block; position:absolute; bottom:100%; left:50%; translate:-50% -11px; color:#f1b9d0; font-size:10px; letter-spacing:.28em; white-space:nowrap; }
+.name-line { width:clamp(24px,6vw,80px); height:1px; background:linear-gradient(90deg,transparent,#ecb2cd); opacity:.72; }
+.name-line:last-child { rotate:180deg; }
+.flower-foot { display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:820px; margin:0 auto; border-top:1px solid rgba(245,196,221,.18); padding:22px 4px 0; }
+.flower-foot p { margin:0; color:rgba(255,239,236,.7); font-size:12px; letter-spacing:.12em; }
+.flower-foot button { border:1px solid rgba(252,186,214,.55); border-radius:999px; padding:10px 19px; background:rgba(202,87,141,.12); color:#ffe4ee; font:13px "Noto Serif SC",serif; letter-spacing:.1em; transition:background .2s,box-shadow .2s,transform .2s; }
+.flower-foot button:hover { background:rgba(202,87,141,.28); box-shadow:0 0 24px rgba(231,130,181,.26); transform:translateY(-2px); }
+.flower-foot button:focus-visible { outline-color:#ffcee0; }
+.flower-foot button span:first-child { color:#f4b6d2; margin-right:5px; }
+@keyframes starPulse { 50% { opacity:.45; filter:brightness(1.5); } }
+@keyframes nameReveal { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes stemGrow { to { stroke-dashoffset:0; } }
+@keyframes flowerBloom { from { opacity:0; transform:scale(.04) rotate(-24deg); } 65% { opacity:1; transform:scale(1.08) rotate(5deg); } to { opacity:1; transform:scale(1) rotate(0); } }
+@keyframes leafGrow { from { opacity:0; transform:scale(.05); } to { opacity:1; transform:scale(1); } }
+@media (max-width:640px) {
+  .flower-main { padding:24px 10px 32px; }
+  .opening { padding-left:10px; }
+  .flower-head { padding:24px 10px 0; }
+  .flower-head h1 { font-size:clamp(45px,12vw,66px); }
+  .flower-sub { font-size:12px; }
+  .scene { width:112%; max-width:none; margin:-10px 0 -22px -6%; }
+  .name-plaque { bottom:4%; }
+  .name-plaque strong { font-size:34px; }
+  .name-label { font-size:8px; letter-spacing:.1em; }
+  .flower-foot { flex-direction:column; text-align:center; gap:16px; padding-top:18px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .flower-page *, .flower-page *::before, .flower-page *::after { animation-duration:.01ms !important; animation-delay:0ms !important; scroll-behavior:auto !important; }
+}

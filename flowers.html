@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0918">
+  <title>给我的小熊 · 刘晚晴</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500&display=swap">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="flowers.css">
+</head>
+<body data-page="flowers" class="flower-page">
+  <canvas id="nightSky" class="night-sky" aria-hidden="true"></canvas>
+  <main class="flower-main">
+    <div class="opening" aria-hidden="true"><span>01</span><span class="line"></span><span>为你写一束花</span></div>
+    <header class="flower-head">
+      <p class="overline" data-flower-zh="一束会发光的花" data-flower-en="A little bouquet of light">一束会发光的花</p>
+      <h1><span data-flower-zh="给我的小熊" data-flower-en="For my little bear">给我的小熊</span><span class="asterisk"> ✳</span></h1>
+      <p class="flower-sub" data-flower-zh="粉色玫瑰会慢慢盛开，白色鸡蛋花守在两旁。" data-flower-en="Pink roses bloom slowly, with white plumerias at their sides.">粉色玫瑰会慢慢盛开，白色鸡蛋花守在两旁。</p>
+    </header>
+
+    <section class="scene" aria-label="粉色玫瑰和白色鸡蛋花在星空下慢慢绽放">
+      <div class="scene-glow" aria-hidden="true"></div>
+      <svg id="bouquet" viewBox="0 0 900 720" role="img" aria-labelledby="bouquetTitle bouquetDesc" preserveAspectRatio="xMidYMid meet">
+        <title id="bouquetTitle">送给刘晚晴的花束</title>
+        <desc id="bouquetDesc">粉色玫瑰从画面中心生长，白色鸡蛋花环绕两侧，星星在夜空中闪烁。</desc>
+      </svg>
+      <div class="name-plaque">
+        <span class="name-line" aria-hidden="true"></span>
+        <span class="name-label" data-flower-zh="每一颗星星都写着你的名字" data-flower-en="Every star carries your name">每一颗星星都写着你的名字</span>
+        <strong>刘晚晴</strong>
+        <span class="name-line" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <footer class="flower-foot">
+      <p data-flower-zh="愿你一直被温柔和光包围。" data-flower-en="May you always be surrounded by gentleness and light.">愿你一直被温柔和光包围。</p>
+      <button id="replayBloom" type="button"><span aria-hidden="true">✦</span> <span data-flower-zh="让花再开一次" data-flower-en="Bloom again">让花再开一次</span></button>
+    </footer>
+  </main>
+  <script src="config.js"></script>
+  <script src="common.js"></script>
+  <script src="flowers.js"></script>
+</body>
+</html>

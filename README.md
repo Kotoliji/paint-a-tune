@@ -1,10 +1,11 @@
 # Our Little Palace · 小小紫禁城
 
-A small site for two people, Chinese by default with an English toggle. Three pages:
+A small site for two people, Chinese by default with an English toggle. Four pages:
 
 - **Notes** (`index.html`) — sticky notes over a collage of our photos. Each note has a big title and small text, its own note and text color. Answer under any note in one of 5 colors.
 - **Tier list** (`tier.html`) — drag 30 activities (camping, tea ceremony, pottery…) into 5 tiers: LOVE IT / Like it / Don't mind / If you want / NO. Press Match when everything is placed. Open your partner's list side by side, add your own cards.
 - **Paint a tune** (`paint.html`) — paint tiles on a grid and hear them play as handpan or xylophone.
+- **For my little bear** (`flowers.html`) — an animated bouquet of pink roses and white plumerias beneath a starry sky, dedicated to 刘晚晴.
 
 No passwords: on first visit each person picks who they are (names live in `config.js`).
 
