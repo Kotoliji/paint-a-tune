@@ -10,7 +10,7 @@ const App = (() => {
   const lang = read(LANG_KEY) === 'en' ? 'en' : 'zh';
   const dict = {
     zh: {
-      brand: '小小紫禁城', navNotes: '便签墙', navTier: '兴趣榜', navPaint: '画旋律', navFlowers: '给我的小熊',
+      brand: '小小紫禁城', navNotes: '便签墙', navTier: '兴趣榜', navPaint: '画旋律', navFlowers: '给我的小熊', navLetter: '给小熊的信',
       whoAmI: '你是谁？', whoHint: '选一次就好，这台设备会记住。',
       synced: '☁ 已同步', local: '💾 只存在这台设备',
       gateTitle: '请输入密码', gateHint: '这是一个私密的小院，只有知道密码的人才能进来。',
@@ -18,7 +18,7 @@ const App = (() => {
       logout: '退出这台设备', photos: '🖼 我们的照片',
     },
     en: {
-      brand: 'Our Little Palace', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune', navFlowers: 'For my little bear',
+      brand: 'Our Little Palace', navNotes: 'Notes', navTier: 'Tier list', navPaint: 'Paint a tune', navFlowers: 'For my little bear', navLetter: 'A letter for my bear',
       whoAmI: 'Who are you?', whoHint: 'Pick once, this device will remember.',
       synced: '☁ Synced', local: '💾 This device only',
       gateTitle: 'Enter the password', gateHint: 'This is a private courtyard. Only people with the password can come in.',
@@ -166,7 +166,7 @@ const App = (() => {
   // ---------- верхнее меню ----------
   function nav() {
     const page = document.body.dataset.page;
-    const links = [['notes', 'index.html', 'navNotes'], ['tier', 'tier.html', 'navTier'], ['paint', 'paint.html', 'navPaint'], ['flowers', 'flowers.html', 'navFlowers']];
+    const links = [['notes', 'index.html', 'navNotes'], ['tier', 'tier.html', 'navTier'], ['paint', 'paint.html', 'navPaint'], ['flowers', 'flowers.html', 'navFlowers'], ['letter', 'letter.html', 'navLetter']];
     const el = document.createElement('nav');
     el.className = 'topnav';
     el.innerHTML = `

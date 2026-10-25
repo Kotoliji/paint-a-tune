@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120b22">
+  <title>给小熊的信 · 小小紫禁城</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="letter.css">
+</head>
+<body data-page="letter" class="letter-page">
+  <canvas id="lanterns" class="lanterns" aria-hidden="true"></canvas>
+  <main class="letter-main">
+    <div id="stage" class="stage">
+      <article id="letter" class="letter">
+        <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+        <p class="eyebrow" data-i18n="eyebrow">一封写给你的信</p>
+        <h1 id="lTitle"></h1>
+        <div class="divider" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div id="lBody" class="poem"></div>
+        <p id="lEmpty" class="l-empty" data-i18n="noLetter" hidden></p>
+        <p id="lSign" class="sign"></p>
+        <div class="seal" aria-hidden="true"><span>永</span><span>爱</span></div>
+      </article>
+    </div>
+  </main>
+  <script src="config.js"></script>
+  <script src="common.js?v=letter-1"></script>
+  <script src="letter.js"></script>
+</body>
+</html>

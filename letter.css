@@ -1,0 +1,166 @@
+/* письмо: лист рисовой бумаги в 3D над ночным небом с летящими фонариками */
+body.letter-page {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--body-font);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 50% 115%, rgba(255, 120, 60, .28), transparent 55%),
+    linear-gradient(180deg, #0c0a1d 0%, #1d0f2e 55%, #3b1226 100%) fixed;
+}
+.lanterns { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+.letter-main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 70px);
+  padding-block: 48px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.stage { perspective: 1400px; width: min(720px, 100%); }
+
+.letter {
+  --paper: #fbf3e2;
+  --red: #a3242c;
+  --gold: #c9a227;
+  position: relative;
+  padding: 64px 64px 96px;
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, .7), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(120, 90, 40, .025) 0 2px, transparent 2px 5px),
+    var(--paper);
+  box-shadow:
+    0 0 0 1px rgba(201, 162, 39, .6),
+    0 0 0 8px var(--paper),
+    0 0 0 9px rgba(163, 36, 44, .55),
+    0 40px 90px rgba(0, 0, 0, .55),
+    0 0 120px rgba(255, 150, 70, .22);
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .25s ease-out;
+  animation: drift 9s ease-in-out infinite alternate;
+  text-align: center;
+}
+@keyframes drift { to { translate: 0 -10px; } }
+
+/* уголки в духе «回纹» */
+.corner {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border: 3px solid var(--gold);
+  transform: translateZ(18px);
+}
+.corner::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 2px solid var(--red);
+}
+.corner.tl { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+.corner.tr { top: 16px; right: 16px; border-left: 0; border-bottom: 0; }
+.corner.bl { bottom: 16px; left: 16px; border-right: 0; border-top: 0; }
+.corner.br { bottom: 16px; right: 16px; border-left: 0; border-top: 0; }
+.corner.tl::after { border-right: 0; border-bottom: 0; }
+.corner.tr::after { border-left: 0; border-bottom: 0; }
+.corner.bl::after { border-right: 0; border-top: 0; }
+.corner.br::after { border-left: 0; border-top: 0; }
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 13px;
+  letter-spacing: .4em;
+  color: #9a7b4a;
+  transform: translateZ(14px);
+}
+.letter h1 {
+  margin: 0;
+  font-family: var(--title-font);
+  font-weight: 400;
+  font-size: 54px;
+  line-height: 1.15;
+  color: var(--red);
+  text-wrap: balance;
+  text-shadow: 0 2px 0 rgba(201, 162, 39, .35);
+  transform: translateZ(40px);
+}
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 22px auto 30px;
+  transform: translateZ(20px);
+}
+.divider span { width: 90px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.divider i { width: 10px; height: 10px; rotate: 45deg; background: var(--red); box-shadow: 0 0 0 3px var(--paper), 0 0 0 4px var(--gold); }
+
+.poem {
+  font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  font-size: 19px;
+  line-height: 2.1;
+  color: #3a2a22;
+  transform: translateZ(24px);
+}
+.stanza { margin: 0 0 22px; }
+.poem .line {
+  display: block;
+  opacity: 0;
+  animation: reveal 1.1s ease forwards;
+  animation-delay: calc(var(--i) * .32s + .4s);
+}
+@keyframes reveal { from { opacity: 0; translate: 0 10px; filter: blur(4px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+
+.sign {
+  margin: 34px 0 0;
+  font-family: var(--title-font);
+  font-size: 30px;
+  color: var(--red);
+  text-align: right;
+  transform: translateZ(30px);
+}
+.l-empty { color: #7a6f66; font-size: 16px; }
+
+.seal {
+  position: absolute;
+  right: 84px;
+  bottom: 48px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  padding: 4px;
+  border: 3px double rgba(255, 255, 255, .7);
+  border-radius: 6px;
+  background: radial-gradient(circle at 30% 30%, #d3343d, #9c1820);
+  color: #fff6ea;
+  font-family: var(--title-font);
+  font-size: 22px;
+  line-height: 1;
+  rotate: -8deg;
+  box-shadow: 0 6px 14px rgba(120, 10, 20, .35);
+  transform: translateZ(60px);
+  opacity: .92;
+}
+
+@media (max-width: 600px) {
+  .letter { padding: 52px 22px 96px; }
+  .letter h1 { font-size: 36px; }
+  .poem { font-size: 16px; line-height: 2; }
+  .corner { width: 30px; height: 30px; }
+  .corner.tl, .corner.tr { top: 10px; }
+  .corner.bl, .corner.br { bottom: 10px; }
+  .corner.tl, .corner.bl { left: 10px; }
+  .corner.tr, .corner.br { right: 10px; }
+  .seal { right: 26px; bottom: 26px; width: 48px; height: 48px; font-size: 18px; }
+  .sign { font-size: 24px; margin-right: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .letter { animation: none; transition: none; }
+  .poem .line { animation: none; opacity: 1; }
+}
